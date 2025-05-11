@@ -89,3 +89,17 @@ app.get('/watering-log', (req, res) => {
 app.listen(port, () => {
     console.log(`Web server running at http://localhost:${port}`);
 });
+
+// Fake GPIO for Win testing
+if (process.platform !== 'linux') {
+  console.log('Mocking GPIO on Windows');
+  const Gpio = function() {
+    return {
+      writeSync: function() {},
+      readSync: function() { return 0; },
+      unexport: function() {}
+    };
+  };
+} else {
+  const Gpio = require('onoff').Gpio;
+}
