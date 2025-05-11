@@ -1,0 +1,5 @@
+[
+  { "timestamp": "2025-05-11T06:45:00Z", "type": "auto" },
+  { "timestamp": "2025-05-11T09:10:00Z", "type": "manual" },
+  { "timestamp": "2025-05-11T12:05:00Z", "type": "auto" }
+]
