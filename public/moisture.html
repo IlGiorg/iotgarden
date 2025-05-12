@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Soil Moisture Readings</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+    }
+    canvas {
+      max-width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <h1>📈 Soil Moisture Readings (Last 24h)</h1>
+  <canvas id="moistureChart" width="600" height="300"></canvas>
+
+  <script>
+    async function loadMoistureData() {
+      const res = await fetch('/data');
+      const data = await res.json();
+
+      // Fallback if entries are in a different structure (value or moisture)
+      const values = data.map(entry => ({
+        timestamp: new Date(entry.timestamp),
+        value: entry.value ?? entry.moisture
+      }));
+
+      const labels = values.map(d => d.timestamp.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
+      const moistureValues = values.map(d => d.value);
+
+      const ctx = document.getElementById('moistureChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Soil Moisture Level',
+            data: moistureValues,
+            borderColor: 'blue',
+            backgroundColor: 'rgba(0, 123, 255, 0.1)',
+            fill: true,
+            tension: 0.3
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: 'Moisture Value'
+              }
+            },
+            x: {
+              title: {
+                display: true,
+                text: 'Time'
+              }
+            }
+          }
+        }
+      });
+    }
+
+    loadMoistureData();
+  </script>
+</body>
+</html>
