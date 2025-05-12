@@ -1,7 +1,0 @@
-[
-  { "timestamp": "2025-05-11T08:00:00Z", "value": 350 },
-  { "timestamp": "2025-05-11T08:30:00Z", "value": 370 },
-  { "timestamp": "2025-05-11T09:00:00Z", "value": 310 },
-  { "timestamp": "2025-05-11T09:30:00Z", "value": 280 },
-  { "timestamp": "2025-05-11T10:00:00Z", "value": 400 }
-]

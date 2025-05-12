@@ -2,15 +2,64 @@
 <html>
 <head>
   <title>Smart Irrigation</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Soil Moisture Monitor</h1>
-  <button onclick="water()">💧 Manual Water</button>
-  <canvas id="moistureChart" width="400" height="200"></canvas>
-    <h2>Watering Events</h2>
-    <ul id="watering-log"></ul>
+  <div class="container">
+    <h1>Soil Moisture Monitor</h1>
+    
+    <button onclick="water()">💧 Manual Water</button>
+    <button onclick="viewMoisture()">📊 View Moisture Data</button>
 
-  <script src="script.js"></script>
+    <h2>Watering Events</h2>
+<table id="watering-log" border="1">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Hour</th>
+      <th>Type</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+  </div>
+
+  <script>
+    async function water() {
+      await fetch('/water', { method: 'POST' });
+      alert('Watered!');
+    }
+  async function loadWateringLog() {
+    const res = await fetch('/watering-log');
+    const data = await res.json();
+    const tbody = document.querySelector('#watering-log tbody');
+    tbody.innerHTML = '';
+
+    data.forEach(entry => {
+      const dateObj = new Date(entry.timestamp);
+      const date = dateObj.toLocaleDateString('en-GB'); // DD/MM/YYYY
+      const time = dateObj.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+      
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${date}</td>
+        <td>${time}</td>
+        <td>${entry.type}</td>
+      `;
+      tbody.appendChild(row);
+    });
+  }
+
+  loadWateringLog();
+
+
+
+    function viewMoisture() {
+      window.location.href = 'moisture.html';
+    }
+
+    loadWateringLog();
+  </script>
 </body>
 </html>
