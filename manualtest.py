@@ -1,30 +1,27 @@
 import RPi.GPIO as GPIO
 import time
 
-RELAY_PIN = 18  # Use the pin your relay is connected to
-WATERING_DURATION = 5  # in seconds
+# Configuration
+TRIGGER_PIN = 18  # GPIO pin connected to HCW-M421 trigger input
 
 # Setup
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(RELAY_PIN, GPIO.OUT)
+GPIO.setup(TRIGGER_PIN, GPIO.OUT)
+GPIO.output(TRIGGER_PIN, GPIO.LOW)  # Ensure trigger is low initially
 
 try:
     while True:
-        choice = input("Enter 1 to start watering (or q to quit): ")
-
-        if choice == '1':
-            print("Watering plants...")
-            GPIO.output(RELAY_PIN, GPIO.HIGH)  # or GPIO.LOW for active-low relay
-            time.sleep(WATERING_DURATION)
-            GPIO.output(RELAY_PIN, GPIO.LOW)   # or GPIO.HIGH if LOW is on
-            print("Done watering.\n")
-
-        elif choice.lower() == 'q':
-            print("Exiting...")
+        user_input = input("Enter '1' to start watering (or 'q' to quit): ")
+        if user_input == '1':
+            print("Triggering relay...")
+            GPIO.output(TRIGGER_PIN, GPIO.HIGH)  # Send high-level signal
+            time.sleep(0.5)  # Maintain signal for 0.5 seconds
+            GPIO.output(TRIGGER_PIN, GPIO.LOW)   # Reset trigger
+            print("Relay triggered.")
+        elif user_input.lower() == 'q':
+            print("Exiting program.")
             break
-
         else:
-            print("Invalid input. Enter '1' or 'q'.\n")
-
+            print("Invalid input. Please enter '1' or 'q'.")
 finally:
     GPIO.cleanup()
